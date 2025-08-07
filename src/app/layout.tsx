@@ -1,6 +1,11 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import ClientBody from "./ClientBody";
+import Script from "next/script";
+import Navbar from "./Navbar";
+import DarkModeToggle from "./page";
+import ParticlesBackground from "./ParticlesBackground";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -23,10 +28,21 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" className={`${geistSans.variable} ${geistMono.variable}`}>
+      <head>
+        <Script
+          crossOrigin="anonymous"
+          src="//unpkg.com/same-runtime/dist/index.global.js"
+        />
+      </head>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={
+          geistSans.className +
+          " relative min-h-screen bg-annie-cream overflow-x-hidden"
+        }
       >
+        <ParticlesBackground />
+        <Navbar />
         {children}
       </body>
     </html>
