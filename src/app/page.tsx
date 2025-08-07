@@ -2,7 +2,7 @@
 
 import HeroSection from "./HeroSection";
 import ProjectsSection from "./ProjectsSection";
-import NewsletterSection from "./NewsletterSection";
+
 import PressSection from "./PressSection";
 import OriginalSection from "./OriginalSection";
 import Footer from "./Footer";
