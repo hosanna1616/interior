@@ -32,7 +32,8 @@ export function MemoryOrbs({
   count = 2,
   position = "bottom-8 right-8",
   className = "",
-  clearOnClick = false,
+ /* clearOnClick = false,*/
+ 
 }: {
   count?: number;
   position?: string;
