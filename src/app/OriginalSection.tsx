@@ -3,7 +3,6 @@ import { useEffect, useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Image from "next/image";
-import { motion } from "framer-motion"; // Added motion import
 
 const images = ["/v9.webp", "/v10.webp", "/v11.webp"];
 
@@ -21,7 +20,6 @@ export default function OriginalSection({
     const ctx = gsap.context(() => {
       if (!sectionRef.current || !textRef.current) return;
 
-      // Pin the text in the center
       ScrollTrigger.create({
         trigger: sectionRef.current,
         start: "top center",
@@ -31,7 +29,6 @@ export default function OriginalSection({
         scrub: true,
       });
 
-      // Animate images moving upward (parallax)
       imgRefs.current.forEach((img) => {
         if (!img) return;
         gsap.fromTo(
@@ -59,12 +56,13 @@ export default function OriginalSection({
       ref={sectionRef}
       className="relative min-h-[120vh] flex items-center justify-center bg-annie-cream overflow-hidden"
     >
-      {/* Images grid behind text */}
       <div className="absolute inset-0 flex flex-row items-center justify-between gap-8 pointer-events-none z-0 w-full h-full">
         {images.map((src, index) => (
           <div
             key={src}
-            ref={(el) => (imgRefs.current[index] = el)}
+            ref={(el) => {
+              imgRefs.current[index] = el; // Fixed ref callback - no return value
+            }}
             className="h-[340px] w-1/3 rounded-xl overflow-hidden shadow-xl bg-white"
             style={{ zIndex: 1 }}
           >
@@ -80,7 +78,6 @@ export default function OriginalSection({
         ))}
       </div>
 
-      {/* Pinned text */}
       <div
         ref={textRef}
         className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-10 text-center w-full flex flex-col items-center"
@@ -94,14 +91,12 @@ export default function OriginalSection({
           Convivial
         </h2>
         {onViewAllWork && (
-          <motion.button
+          <button
             onClick={onViewAllWork}
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
             className="mt-4 text-lg uppercase tracking-widest border-b-2 border-black/60 pb-2 px-8 py-3 rounded bg-white text-black font-medium shadow hover:border-footer focus:outline-none transition-all duration-300 hover:bg-footer hover:text-annie-cream"
           >
             View All Work
-          </motion.button>
+          </button>
         )}
       </div>
     </section>
