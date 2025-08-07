@@ -15,11 +15,17 @@ export default function OriginalSection({
   const textRef = useRef<HTMLDivElement>(null);
   const imgRefs = useRef<(HTMLDivElement | null)[]>([]);
 
+  // Initialize the ref array
+  useEffect(() => {
+    imgRefs.current = imgRefs.current.slice(0, images.length);
+  }, []);
+
   useEffect(() => {
     gsap.registerPlugin(ScrollTrigger);
     const ctx = gsap.context(() => {
       if (!sectionRef.current || !textRef.current) return;
 
+      // Pin the text in the center
       ScrollTrigger.create({
         trigger: sectionRef.current,
         start: "top center",
@@ -29,6 +35,7 @@ export default function OriginalSection({
         scrub: true,
       });
 
+      // Animate images moving upward (parallax)
       imgRefs.current.forEach((img) => {
         if (!img) return;
         gsap.fromTo(
@@ -56,12 +63,15 @@ export default function OriginalSection({
       ref={sectionRef}
       className="relative min-h-[120vh] flex items-center justify-center bg-annie-cream overflow-hidden"
     >
+      {/* Images grid behind text */}
       <div className="absolute inset-0 flex flex-row items-center justify-between gap-8 pointer-events-none z-0 w-full h-full">
         {images.map((src, index) => (
           <div
             key={src}
             ref={(el) => {
-              imgRefs.current[index] = el; // Fixed ref callback - no return value
+              if (el) {
+                imgRefs.current[index] = el;
+              }
             }}
             className="h-[340px] w-1/3 rounded-xl overflow-hidden shadow-xl bg-white"
             style={{ zIndex: 1 }}
@@ -78,6 +88,7 @@ export default function OriginalSection({
         ))}
       </div>
 
+      {/* Pinned text */}
       <div
         ref={textRef}
         className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-10 text-center w-full flex flex-col items-center"
