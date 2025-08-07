@@ -2,13 +2,10 @@
 import { useEffect, useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import Image from "next/image"; // Added Next.js Image component
+import Image from "next/image";
+import { motion } from "framer-motion"; // Added motion import
 
-const images = [
-  "/v9.webp",
-  "/v10.webp",
-  "/v11.webp",
-];
+const images = ["/v9.webp", "/v10.webp", "/v11.webp"];
 
 export default function OriginalSection({
   onViewAllWork,
@@ -34,8 +31,8 @@ export default function OriginalSection({
         scrub: true,
       });
 
-      // Animate images moving upward (parallax, increased amount)
-      imgRefs.current.forEach((img, index) => {
+      // Animate images moving upward (parallax)
+      imgRefs.current.forEach((img) => {
         if (!img) return;
         gsap.fromTo(
           img,
@@ -54,7 +51,7 @@ export default function OriginalSection({
       });
     });
 
-    return () => ctx.revert(); // Cleanup GSAP context
+    return () => ctx.revert();
   }, []);
 
   return (
@@ -62,7 +59,7 @@ export default function OriginalSection({
       ref={sectionRef}
       className="relative min-h-[120vh] flex items-center justify-center bg-annie-cream overflow-hidden"
     >
-      {/* Images grid behind text, edge-to-edge with spacing */}
+      {/* Images grid behind text */}
       <div className="absolute inset-0 flex flex-row items-center justify-between gap-8 pointer-events-none z-0 w-full h-full">
         {images.map((src, index) => (
           <div
@@ -71,16 +68,18 @@ export default function OriginalSection({
             className="h-[340px] w-1/3 rounded-xl overflow-hidden shadow-xl bg-white"
             style={{ zIndex: 1 }}
           >
-            <Image 
-              src={src} 
-              alt="Work" 
-              width={500} 
+            <Image
+              src={src}
+              alt="Work"
+              width={500}
               height={340}
               className="w-full h-full object-cover"
+              priority={index === 0}
             />
           </div>
         ))}
       </div>
+
       {/* Pinned text */}
       <div
         ref={textRef}
@@ -95,12 +94,14 @@ export default function OriginalSection({
           Convivial
         </h2>
         {onViewAllWork && (
-          <button
+          <motion.button
             onClick={onViewAllWork}
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
             className="mt-4 text-lg uppercase tracking-widest border-b-2 border-black/60 pb-2 px-8 py-3 rounded bg-white text-black font-medium shadow hover:border-footer focus:outline-none transition-all duration-300 hover:bg-footer hover:text-annie-cream"
           >
             View All Work
-          </button>
+          </motion.button>
         )}
       </div>
     </section>

@@ -3,7 +3,7 @@ import { useEffect, useRef, useState } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { motion, AnimatePresence } from "framer-motion";
-import Image from "next/image"; // Added Next.js Image component
+import Image from "next/image";
 
 const press = [
   {
@@ -34,16 +34,21 @@ const press = [
 
 function ConfettiBurst({ show }: { show: boolean }) {
   if (!show) return null;
-  const confetti = Array.from({ length: 18 }, (_item, index) => ({
+
+  const confetti = Array.from({ length: 18 }).map(() => ({
+    id: Math.random().toString(36).substring(2, 9),
     left: Math.random() * 100,
     delay: Math.random() * 0.7,
-    color: ["#a16207", "#fce8de", "#fff7f1", "#331628"][index % 4],
+    color: ["#a16207", "#fce8de", "#fff7f1", "#331628"][
+      Math.floor(Math.random() * 4)
+    ],
   }));
+
   return (
     <div className="absolute inset-0 pointer-events-none z-50">
-      {confetti.map((c, index) => (
+      {confetti.map((c) => (
         <motion.div
-          key={index}
+          key={c.id}
           className="absolute w-2 h-2 rounded-full"
           style={{
             left: `${c.left}%`,
@@ -68,7 +73,7 @@ export default function PressSection() {
   useEffect(() => {
     gsap.registerPlugin(ScrollTrigger);
     const ctx = gsap.context(() => {
-      cardsRef.current.forEach((card, index) => {
+      cardsRef.current.forEach((card) => {
         if (!card) return;
         gsap.fromTo(
           card,
@@ -89,11 +94,12 @@ export default function PressSection() {
       });
     });
 
-    return () => ctx.revert(); // Cleanup GSAP context
+    return () => ctx.revert();
   }, []);
 
   function ParallaxBg() {
-    const dots = Array.from({ length: 18 }, (_item, index) => ({
+    const dots = Array.from({ length: 18 }).map(() => ({
+      id: Math.random().toString(36).substring(2, 9),
       left: Math.random() * 100,
       top: Math.random() * 100,
       size: 18 + Math.random() * 18,
@@ -101,6 +107,7 @@ export default function PressSection() {
       delay: Math.random() * 8,
       duration: 10 + Math.random() * 10,
     }));
+
     return (
       <div className="absolute inset-0 -z-10 w-full h-full overflow-hidden pointer-events-none">
         <motion.div
@@ -112,9 +119,9 @@ export default function PressSection() {
           animate={{ backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"] }}
           transition={{ duration: 24, repeat: Infinity, ease: "linear" }}
         />
-        {dots.map((d, index) => (
+        {dots.map((d) => (
           <motion.div
-            key={index}
+            key={d.id}
             className="absolute rounded-full bg-annie-brown"
             style={{
               width: d.size,
@@ -165,6 +172,7 @@ export default function PressSection() {
               setTimeout(() => setConfettiIdx(null), 1400);
             }}
           >
+            {/* Floating press badge */}
             <motion.div
               className="absolute -top-8 left-1/2 -translate-x-1/2 z-20"
               initial={{ opacity: 0, y: -20 }}
@@ -189,6 +197,8 @@ export default function PressSection() {
                 {item.source}
               </motion.div>
             </motion.div>
+
+            {/* Image with hover overlay */}
             <div className="overflow-hidden rounded-t-3xl relative">
               <Image
                 src={item.img}
@@ -218,6 +228,8 @@ export default function PressSection() {
                 )}
               </AnimatePresence>
             </div>
+
+            {/* Content section */}
             <div className="p-8">
               <p className="text-xs uppercase tracking-widest opacity-70 leading-relaxed mb-4 text-footer">
                 {item.title}
@@ -262,21 +274,29 @@ export default function PressSection() {
                 </motion.svg>
               </motion.a>
             </div>
+
             <ConfettiBurst show={confettiIdx === index} />
           </motion.div>
         ))}
       </div>
-      <style>{`
+
+      {/* Ripple effect styles */}
+      <style jsx>{`
         .press-ripple {
           position: absolute;
           width: 120px;
           height: 120px;
-          background: radial-gradient(circle, #a16207 0%, #fce8de 80%, transparent 100%);
+          background: radial-gradient(
+            circle,
+            #a16207 0%,
+            #fce8de 80%,
+            transparent 100%
+          );
           opacity: 0.25;
           border-radius: 50%;
           pointer-events: none;
           transform: translate(-50%, -50%) scale(0);
-          animation: ripple-press 0.6s cubic-bezier(0.4,0,0.2,1);
+          animation: ripple-press 0.6s cubic-bezier(0.4, 0, 0.2, 1);
           z-index: 2;
         }
         @keyframes ripple-press {
