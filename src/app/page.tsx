@@ -1,10 +1,10 @@
 "use client";
 import { useRef } from "react";
-import HeroSection from "./components/HeroSection";
-import OriginalSection from "./components/OriginalSection";
-import AllWorkGallery from "./components/AllWorkGallery";
-import PressSection from "./components/PressSection";
-import Footer from "./components/Footer";
+import HeroSection from "./HeroSection"; // Update path as needed
+import OriginalSection from "./OriginalSection"; // Update path as needed
+import AllWorkGallery from "./AllWorkGallery"; // Update path as needed
+import PressSection from "./PressSection"; // Update path as needed
+import Footer from "./Footer"; // Update path as needed
 
 export default function Home() {
   const sectionsRef = useRef<(HTMLDivElement | null)[]>([]);
