@@ -172,7 +172,6 @@ export default function PressSection() {
               setTimeout(() => setConfettiIdx(null), 1400);
             }}
           >
-            {/* Floating press badge */}
             <motion.div
               className="absolute -top-8 left-1/2 -translate-x-1/2 z-20"
               initial={{ opacity: 0, y: -20 }}
@@ -198,7 +197,6 @@ export default function PressSection() {
               </motion.div>
             </motion.div>
 
-            {/* Image with hover overlay */}
             <div className="overflow-hidden rounded-t-3xl relative">
               <Image
                 src={item.img}
@@ -229,7 +227,6 @@ export default function PressSection() {
               </AnimatePresence>
             </div>
 
-            {/* Content section */}
             <div className="p-8">
               <p className="text-xs uppercase tracking-widest opacity-70 leading-relaxed mb-4 text-footer">
                 {item.title}
@@ -280,7 +277,6 @@ export default function PressSection() {
         ))}
       </div>
 
-      {/* Ripple effect styles */}
       <style jsx>{`
         .press-ripple {
           position: absolute;
