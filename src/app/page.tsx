@@ -1,97 +1,61 @@
 "use client";
-
-import HeroSection from "./HeroSection";
-import ProjectsSection from "./ProjectsSection";
-
-import PressSection from "./PressSection";
-import OriginalSection from "./OriginalSection";
-import Footer from "./Footer";
-import Navbar from "./Navbar";
-import AllWorkGallery from "./AllWorkGallery";
-import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { useEffect, useRef, useState } from "react";
-import NewsletterPopup from "./NewsletterPopup";
+import { useRef } from "react";
+import HeroSection from "./components/HeroSection";
+import OriginalSection from "./components/OriginalSection";
+import AllWorkGallery from "./components/AllWorkGallery";
+import PressSection from "./components/PressSection";
+import Footer from "./components/Footer";
 
 export default function Home() {
   const sectionsRef = useRef<(HTMLDivElement | null)[]>([]);
-  const [galleryOpen, setGalleryOpen] = useState(false);
-  const [newsletterOpen, setNewsletterOpen] = useState(false);
 
-  useEffect(() => {
-    gsap.registerPlugin(ScrollTrigger);
-    sectionsRef.current.forEach((section) => {
-      if (!section) return;
-      const child = section.firstElementChild;
-      if (!child) return;
-      gsap.fromTo(
-        child,
-        { rotateX: -90, opacity: 0, transformOrigin: "top center" },
-        {
-          rotateX: 0,
-          opacity: 1,
-          duration: 1.1,
-          ease: "power3.out",
-          scrollTrigger: {
-            trigger: section,
-            start: "top 80%",
-            end: "top 30%",
-            toggleActions: "play none none reverse",
-          },
-        }
-      );
-    });
-  }, []);
+  // Initialize ref array
+  const initializeRefs = () => {
+    sectionsRef.current = sectionsRef.current.slice(0, 4);
+  };
 
   return (
     <>
-      <Navbar />
       <main className="pt-24">
         <div
-          ref={(el) => (sectionsRef.current[0] = el)}
+          ref={(el) => {
+            initializeRefs();
+            if (el) sectionsRef.current[0] = el;
+          }}
           className="bookfold-section mb-12"
         >
           <HeroSection />
         </div>
+
         <div
-          ref={(el) => (sectionsRef.current[1] = el)}
+          ref={(el) => {
+            if (el) sectionsRef.current[1] = el;
+          }}
           className="bookfold-section mb-12"
         >
-          <ProjectsSection onViewAllWork={() => setGalleryOpen(true)} />
+          <OriginalSection />
         </div>
-        {/* Newsletter trigger button */}
-        <div className="flex justify-center mb-12">
-          <button
-            onClick={() => setNewsletterOpen(true)}
-            className="px-8 py-4 bg-annie-purple text-white rounded-full shadow-xl text-lg font-serif tracking-widest hover:bg-annie-brown hover:scale-105 transition-all duration-300 fire-hover"
-          >
-            Join Our Studio Newsletter
-          </button>
-        </div>
-        {/* Remove inline NewsletterSection, keep popup only */}
+
         <div
-          ref={(el) => (sectionsRef.current[2] = el)}
+          ref={(el) => {
+            if (el) sectionsRef.current[2] = el;
+          }}
+          className="bookfold-section mb-12"
+        >
+          <AllWorkGallery />
+        </div>
+
+        <div
+          ref={(el) => {
+            if (el) sectionsRef.current[3] = el;
+          }}
+          id="press"
           className="bookfold-section mb-12"
         >
           <PressSection />
         </div>
-        <div
-          ref={(el) => (sectionsRef.current[3] = el)}
-          className="bookfold-section mb-12"
-        >
-          <OriginalSection onViewAllWork={() => setGalleryOpen(true)} />
-        </div>
-        <div
-          ref={(el) => (sectionsRef.current[4] = el)}
-          className="bookfold-section"
-        >
-          <Footer />
-        </div>
       </main>
-      {galleryOpen && <AllWorkGallery onClose={() => setGalleryOpen(false)} />}
-      {newsletterOpen && (
-        <NewsletterPopup onClose={() => setNewsletterOpen(false)} />
-      )}
+      <Footer />
     </>
   );
 }
