@@ -2,6 +2,7 @@
 import { useEffect, useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import Image from "next/image"; // Added Next.js Image component
 
 const images = [
   "/v9.webp",
@@ -20,36 +21,40 @@ export default function OriginalSection({
 
   useEffect(() => {
     gsap.registerPlugin(ScrollTrigger);
-    if (!sectionRef.current || !textRef.current) return;
+    const ctx = gsap.context(() => {
+      if (!sectionRef.current || !textRef.current) return;
 
-    // Pin the text in the center
-    ScrollTrigger.create({
-      trigger: sectionRef.current,
-      start: "top center",
-      end: "bottom center",
-      pin: textRef.current,
-      pinSpacing: false,
-      scrub: true,
+      // Pin the text in the center
+      ScrollTrigger.create({
+        trigger: sectionRef.current,
+        start: "top center",
+        end: "bottom center",
+        pin: textRef.current,
+        pinSpacing: false,
+        scrub: true,
+      });
+
+      // Animate images moving upward (parallax, increased amount)
+      imgRefs.current.forEach((img, index) => {
+        if (!img) return;
+        gsap.fromTo(
+          img,
+          { y: 0 },
+          {
+            y: -320,
+            ease: "none",
+            scrollTrigger: {
+              trigger: sectionRef.current,
+              start: "top center",
+              end: "bottom center",
+              scrub: true,
+            },
+          }
+        );
+      });
     });
 
-    // Animate images moving upward (parallax, increased amount)
-    imgRefs.current.forEach((img, i) => {
-      if (!img) return;
-      gsap.fromTo(
-        img,
-        { y: 0 },
-        {
-          y: -320,
-          ease: "none",
-          scrollTrigger: {
-            trigger: sectionRef.current,
-            start: "top center",
-            end: "bottom center",
-            scrub: true,
-          },
-        }
-      );
-    });
+    return () => ctx.revert(); // Cleanup GSAP context
   }, []);
 
   return (
@@ -59,14 +64,20 @@ export default function OriginalSection({
     >
       {/* Images grid behind text, edge-to-edge with spacing */}
       <div className="absolute inset-0 flex flex-row items-center justify-between gap-8 pointer-events-none z-0 w-full h-full">
-        {images.map((src, i) => (
+        {images.map((src, index) => (
           <div
             key={src}
-            ref={(el) => (imgRefs.current[i] = el)}
+            ref={(el) => (imgRefs.current[index] = el)}
             className="h-[340px] w-1/3 rounded-xl overflow-hidden shadow-xl bg-white"
             style={{ zIndex: 1 }}
           >
-            <img src={src} alt="Work" className="w-full h-full object-cover" />
+            <Image 
+              src={src} 
+              alt="Work" 
+              width={500} 
+              height={340}
+              className="w-full h-full object-cover"
+            />
           </div>
         ))}
       </div>
@@ -83,12 +94,14 @@ export default function OriginalSection({
           <br />
           Convivial
         </h2>
-        <button
-          onClick={onViewAllWork}
-          className="mt-4 text-lg uppercase tracking-widest border-b-2 border-black/60 pb-2 px-8 py-3 rounded bg-white text-black font-medium shadow hover:border-footer focus:outline-none transition-all duration-300 hover:bg-footer hover:text-annie-cream"
-        >
-          View All Work
-        </button>
+        {onViewAllWork && (
+          <button
+            onClick={onViewAllWork}
+            className="mt-4 text-lg uppercase tracking-widest border-b-2 border-black/60 pb-2 px-8 py-3 rounded bg-white text-black font-medium shadow hover:border-footer focus:outline-none transition-all duration-300 hover:bg-footer hover:text-annie-cream"
+          >
+            View All Work
+          </button>
+        )}
       </div>
     </section>
   );

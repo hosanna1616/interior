@@ -1,6 +1,6 @@
 "use client";
 import { motion } from "framer-motion";
-import { MemoryOrbs } from "./ParticlesBackground";
+
 
 const socials = [
   {

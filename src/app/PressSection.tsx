@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { motion, AnimatePresence } from "framer-motion";
+import Image from "next/image"; // Added Next.js Image component
 
 const press = [
   {
@@ -15,7 +16,7 @@ const press = [
   },
   {
     title:
-      "Lindye Galloway’s designs for RH, must-see releases from McGee & Co., Roman and Williams Guild, and more",
+      "Lindye Galloway's designs for RH, must-see releases from McGee & Co., Roman and Williams Guild, and more",
     source: "Business of Home",
     link: "#",
     img: "/v8.webp",
@@ -23,7 +24,7 @@ const press = [
   },
   {
     title:
-      "A 1960s Houston House Gets a Refresh to Match Its Owners’ Youthful Energy",
+      "A 1960s Houston House Gets a Refresh to Match Its Owners' Youthful Energy",
     source: "Frederic Magazine",
     link: "#",
     img: "/v7.webp",
@@ -33,16 +34,16 @@ const press = [
 
 function ConfettiBurst({ show }: { show: boolean }) {
   if (!show) return null;
-  const confetti = Array.from({ length: 18 }, (_, i) => ({
+  const confetti = Array.from({ length: 18 }, (_item, index) => ({
     left: Math.random() * 100,
     delay: Math.random() * 0.7,
-    color: ["#a16207", "#fce8de", "#fff7f1", "#331628"][i % 4],
+    color: ["#a16207", "#fce8de", "#fff7f1", "#331628"][index % 4],
   }));
   return (
     <div className="absolute inset-0 pointer-events-none z-50">
-      {confetti.map((c, i) => (
+      {confetti.map((c, index) => (
         <motion.div
-          key={i}
+          key={index}
           className="absolute w-2 h-2 rounded-full"
           style={{
             left: `${c.left}%`,
@@ -66,31 +67,33 @@ export default function PressSection() {
 
   useEffect(() => {
     gsap.registerPlugin(ScrollTrigger);
-    cardsRef.current.forEach((card, i) => {
-      if (!card) return;
-      gsap.fromTo(
-        card,
-        { rotateX: -80, opacity: 0, transformOrigin: "top center" },
-        {
-          rotateX: 0,
-          opacity: 1,
-          duration: 1.1,
-          ease: "power3.out",
-          scrollTrigger: {
-            trigger: card,
-            start: "top 85%",
-            end: "top 40%",
-            toggleActions: "play none none reverse",
-          },
-        }
-      );
+    const ctx = gsap.context(() => {
+      cardsRef.current.forEach((card, index) => {
+        if (!card) return;
+        gsap.fromTo(
+          card,
+          { rotateX: -80, opacity: 0, transformOrigin: "top center" },
+          {
+            rotateX: 0,
+            opacity: 1,
+            duration: 1.1,
+            ease: "power3.out",
+            scrollTrigger: {
+              trigger: card,
+              start: "top 85%",
+              end: "top 40%",
+              toggleActions: "play none none reverse",
+            },
+          }
+        );
+      });
     });
+
+    return () => ctx.revert(); // Cleanup GSAP context
   }, []);
 
-  // Parallax animated background
-  // (simple animated gradient and floating dots)
   function ParallaxBg() {
-    const dots = Array.from({ length: 18 }, (_, i) => ({
+    const dots = Array.from({ length: 18 }, (_item, index) => ({
       left: Math.random() * 100,
       top: Math.random() * 100,
       size: 18 + Math.random() * 18,
@@ -109,9 +112,9 @@ export default function PressSection() {
           animate={{ backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"] }}
           transition={{ duration: 24, repeat: Infinity, ease: "linear" }}
         />
-        {dots.map((d, i) => (
+        {dots.map((d, index) => (
           <motion.div
-            key={i}
+            key={index}
             className="absolute rounded-full bg-annie-brown"
             style={{
               width: d.size,
@@ -144,10 +147,10 @@ export default function PressSection() {
         In the Press
       </h2>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-12 relative">
-        {press.map((item, i) => (
+        {press.map((item, index) => (
           <motion.div
             key={item.title}
-            ref={(el) => (cardsRef.current[i] = el)}
+            ref={(el) => (cardsRef.current[index] = el)}
             className="group cursor-pointer bg-white/60 glass text-annie-brown rounded-3xl p-0 shadow-2xl hover:shadow-3xl transition-all duration-500 relative overflow-visible border border-annie-brown/10"
             style={{ minHeight: 420 }}
             whileHover={{
@@ -155,14 +158,13 @@ export default function PressSection() {
               rotateY: 8,
               boxShadow: "0 8px 32px 0 #a1620733",
             }}
-            onHoverStart={() => setHovered(i)}
+            onHoverStart={() => setHovered(index)}
             onHoverEnd={() => setHovered(null)}
             onClick={() => {
-              setConfettiIdx(i);
+              setConfettiIdx(index);
               setTimeout(() => setConfettiIdx(null), 1400);
             }}
           >
-            {/* Floating glowing press badge */}
             <motion.div
               className="absolute -top-8 left-1/2 -translate-x-1/2 z-20"
               initial={{ opacity: 0, y: -20 }}
@@ -172,15 +174,15 @@ export default function PressSection() {
               <motion.div
                 className="rounded-full bg-annie-brown text-annie-cream px-6 py-2 text-lg font-serif shadow-xl border-2 border-white/60"
                 animate={{
-                  scale: hovered === i ? [1, 1.12, 1] : 1,
+                  scale: hovered === index ? [1, 1.12, 1] : 1,
                   boxShadow:
-                    hovered === i
+                    hovered === index
                       ? "0 0 32px 8px #a16207cc"
                       : "0 2px 12px 0 #a1620733",
                 }}
                 transition={{
                   duration: 1.2,
-                  repeat: hovered === i ? Infinity : 0,
+                  repeat: hovered === index ? Infinity : 0,
                   ease: "easeInOut",
                 }}
               >
@@ -188,14 +190,15 @@ export default function PressSection() {
               </motion.div>
             </motion.div>
             <div className="overflow-hidden rounded-t-3xl relative">
-              <img
+              <Image
                 src={item.img}
                 alt={item.source}
+                width={500}
+                height={300}
                 className="w-full h-48 object-cover glow-hover"
               />
-              {/* Animated quote overlay on hover */}
               <AnimatePresence>
-                {hovered === i && (
+                {hovered === index && (
                   <motion.div
                     className="absolute inset-0 flex items-center justify-center bg-white/90 backdrop-blur-lg rounded-t-3xl z-30"
                     initial={{ opacity: 0, y: 30 }}
@@ -221,7 +224,7 @@ export default function PressSection() {
               </p>
               <motion.h4
                 className="text-2xl font-serif mb-4 text-annie-brown"
-                animate={{ color: hovered === i ? "#a16207" : "#331628" }}
+                animate={{ color: hovered === index ? "#a16207" : "#331628" }}
                 transition={{ duration: 0.3 }}
               >
                 {item.source}
@@ -231,7 +234,6 @@ export default function PressSection() {
                 className="inline-flex items-center text-sm uppercase tracking-widest text-footer hover:text-annie-brown transition-colors duration-300 px-4 py-2 rounded relative overflow-hidden"
                 whileHover={{ scale: 1.08 }}
                 onMouseDown={(e) => {
-                  // Futuristic ripple effect
                   const btn = e.currentTarget;
                   const ripple = document.createElement("span");
                   ripple.className = "press-ripple";
@@ -260,11 +262,10 @@ export default function PressSection() {
                 </motion.svg>
               </motion.a>
             </div>
-            <ConfettiBurst show={confettiIdx === i} />
+            <ConfettiBurst show={confettiIdx === index} />
           </motion.div>
         ))}
       </div>
-      {/* Ripple effect CSS */}
       <style>{`
         .press-ripple {
           position: absolute;
