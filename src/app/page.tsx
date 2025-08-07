@@ -8,7 +8,7 @@ import PressSection from "./PressSection";
 import OriginalSection from "./OriginalSection";
 import Footer from "./Footer";
 import Navbar from "./Navbar";
-import AllWorkGallery from "./AllWorkGallery"; // Make sure this path is correct
+import AllWorkGallery from "./AllWorkGallery";
 import NewsletterPopup from "./NewsletterPopup";
 
 export default function Home() {
@@ -16,20 +16,25 @@ export default function Home() {
   const [galleryOpen, setGalleryOpen] = useState(false);
   const [newsletterOpen, setNewsletterOpen] = useState(false);
 
-  // Initialize ref array for 5 sections
+  // Initialize ref array with proper length
   useEffect(() => {
     sectionsRef.current = sectionsRef.current.slice(0, 5);
   }, []);
 
+  // Animation setup
   useEffect(() => {
     gsap.registerPlugin(ScrollTrigger);
+
     sectionsRef.current.forEach((section) => {
       if (!section) return;
-      const child = section.firstElementChild;
-      if (!child) return;
+
       gsap.fromTo(
-        child,
-        { rotateX: -90, opacity: 0, transformOrigin: "top center" },
+        section.firstElementChild,
+        {
+          rotateX: -90,
+          opacity: 0,
+          transformOrigin: "top center",
+        },
         {
           rotateX: 0,
           opacity: 1,
@@ -50,7 +55,7 @@ export default function Home() {
     <>
       <Navbar />
       <main className="pt-24">
-        {/* Hero Section */}
+        {/* Section 1: Hero */}
         <div
           ref={(el) => {
             if (el) sectionsRef.current[0] = el;
@@ -60,7 +65,7 @@ export default function Home() {
           <HeroSection />
         </div>
 
-        {/* Projects Section */}
+        {/* Section 2: Projects */}
         <div
           ref={(el) => {
             if (el) sectionsRef.current[1] = el;
@@ -71,7 +76,7 @@ export default function Home() {
           <ProjectsSection onViewAllWork={() => setGalleryOpen(true)} />
         </div>
 
-        {/* Newsletter Trigger */}
+        {/* Newsletter CTA */}
         <div className="flex justify-center mb-12">
           <button
             onClick={() => setNewsletterOpen(true)}
@@ -81,7 +86,7 @@ export default function Home() {
           </button>
         </div>
 
-        {/* Press Section */}
+        {/* Section 3: Press */}
         <div
           ref={(el) => {
             if (el) sectionsRef.current[2] = el;
@@ -92,17 +97,17 @@ export default function Home() {
           <PressSection />
         </div>
 
-        {/* Gallery Section */}
+        {/* Section 4: Gallery Placeholder */}
         <div
           ref={(el) => {
             if (el) sectionsRef.current[3] = el;
           }}
           className="bookfold-section mb-12"
         >
-          {/* This is where AllWorkGallery content would go */}
+          {/* Content can be added here later */}
         </div>
 
-        {/* Footer */}
+        {/* Section 5: Footer */}
         <div
           ref={(el) => {
             if (el) sectionsRef.current[4] = el;
