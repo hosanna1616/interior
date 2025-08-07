@@ -1,22 +1,25 @@
 "use client";
-
+import { useEffect, useRef, useState } from "react";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 import HeroSection from "./HeroSection";
 import ProjectsSection from "./ProjectsSection";
-
 import PressSection from "./PressSection";
 import OriginalSection from "./OriginalSection";
 import Footer from "./Footer";
 import Navbar from "./Navbar";
-import AllWorkGallery from "./AllWorkGallery";
-import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { useEffect, useRef, useState } from "react";
+import AllWorkGallery from "./AllWorkGallery"; // Make sure this path is correct
 import NewsletterPopup from "./NewsletterPopup";
 
 export default function Home() {
   const sectionsRef = useRef<(HTMLDivElement | null)[]>([]);
   const [galleryOpen, setGalleryOpen] = useState(false);
   const [newsletterOpen, setNewsletterOpen] = useState(false);
+
+  // Initialize ref array for 5 sections
+  useEffect(() => {
+    sectionsRef.current = sectionsRef.current.slice(0, 5);
+  }, []);
 
   useEffect(() => {
     gsap.registerPlugin(ScrollTrigger);
@@ -47,19 +50,28 @@ export default function Home() {
     <>
       <Navbar />
       <main className="pt-24">
+        {/* Hero Section */}
         <div
-          ref={(el) => (sectionsRef.current[0] = el)}
+          ref={(el) => {
+            if (el) sectionsRef.current[0] = el;
+          }}
           className="bookfold-section mb-12"
         >
           <HeroSection />
         </div>
+
+        {/* Projects Section */}
         <div
-          ref={(el) => (sectionsRef.current[1] = el)}
+          ref={(el) => {
+            if (el) sectionsRef.current[1] = el;
+          }}
           className="bookfold-section mb-12"
         >
+          <OriginalSection />
           <ProjectsSection onViewAllWork={() => setGalleryOpen(true)} />
         </div>
-        {/* Newsletter trigger button */}
+
+        {/* Newsletter Trigger */}
         <div className="flex justify-center mb-12">
           <button
             onClick={() => setNewsletterOpen(true)}
@@ -68,26 +80,40 @@ export default function Home() {
             Join Our Studio Newsletter
           </button>
         </div>
-        {/* Remove inline NewsletterSection, keep popup only */}
+
+        {/* Press Section */}
         <div
-          ref={(el) => (sectionsRef.current[2] = el)}
+          ref={(el) => {
+            if (el) sectionsRef.current[2] = el;
+          }}
+          id="press"
           className="bookfold-section mb-12"
         >
           <PressSection />
         </div>
+
+        {/* Gallery Section */}
         <div
-          ref={(el) => (sectionsRef.current[3] = el)}
+          ref={(el) => {
+            if (el) sectionsRef.current[3] = el;
+          }}
           className="bookfold-section mb-12"
         >
-          <OriginalSection onViewAllWork={() => setGalleryOpen(true)} />
+          {/* This is where AllWorkGallery content would go */}
         </div>
+
+        {/* Footer */}
         <div
-          ref={(el) => (sectionsRef.current[4] = el)}
+          ref={(el) => {
+            if (el) sectionsRef.current[4] = el;
+          }}
           className="bookfold-section"
         >
           <Footer />
         </div>
       </main>
+
+      {/* Modals */}
       {galleryOpen && <AllWorkGallery onClose={() => setGalleryOpen(false)} />}
       {newsletterOpen && (
         <NewsletterPopup onClose={() => setNewsletterOpen(false)} />
