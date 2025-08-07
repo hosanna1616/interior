@@ -70,6 +70,11 @@ export default function PressSection() {
   const [hovered, setHovered] = useState<number | null>(null);
   const [confettiIdx, setConfettiIdx] = useState<number | null>(null);
 
+  // Initialize ref array
+  useEffect(() => {
+    cardsRef.current = cardsRef.current.slice(0, press.length);
+  }, []);
+
   useEffect(() => {
     gsap.registerPlugin(ScrollTrigger);
     const ctx = gsap.context(() => {
@@ -157,7 +162,11 @@ export default function PressSection() {
         {press.map((item, index) => (
           <motion.div
             key={item.title}
-            ref={(el) => (cardsRef.current[index] = el)}
+            ref={(el) => {
+              if (el) {
+                cardsRef.current[index] = el;
+              }
+            }}
             className="group cursor-pointer bg-white/60 glass text-annie-brown rounded-3xl p-0 shadow-2xl hover:shadow-3xl transition-all duration-500 relative overflow-visible border border-annie-brown/10"
             style={{ minHeight: 420 }}
             whileHover={{
