@@ -69,6 +69,7 @@ export default function PressSection() {
   const cardsRef = useRef<(HTMLDivElement | null)[]>([]);
   const [hovered, setHovered] = useState<number | null>(null);
   const [confettiIdx, setConfettiIdx] = useState<number | null>(null);
+  const [mounted, setMounted] = useState(false);
 
   // Initialize ref array
   useEffect(() => {
@@ -76,6 +77,12 @@ export default function PressSection() {
   }, []);
 
   useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  useEffect(() => {
+    if (!mounted) return;
+    
     gsap.registerPlugin(ScrollTrigger);
     const ctx = gsap.context(() => {
       cardsRef.current.forEach((card) => {
@@ -100,7 +107,7 @@ export default function PressSection() {
     });
 
     return () => ctx.revert();
-  }, []);
+  }, [mounted]);
 
   function ParallaxBg() {
     const dots = Array.from({ length: 18 }).map(() => ({
@@ -252,6 +259,7 @@ export default function PressSection() {
                 className="inline-flex items-center text-sm uppercase tracking-widest text-footer hover:text-annie-brown transition-colors duration-300 px-4 py-2 rounded relative overflow-hidden"
                 whileHover={{ scale: 1.08 }}
                 onMouseDown={(e) => {
+                  if (!mounted) return;
                   const btn = e.currentTarget;
                   const ripple = document.createElement("span");
                   ripple.className = "press-ripple";

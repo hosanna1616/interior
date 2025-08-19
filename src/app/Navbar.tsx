@@ -8,13 +8,21 @@ const navLinks = [
   { label: "ADI Wallpaper", to: "#adi-wallpaper" },
   { label: "Information", to: "#information" },
   { label: "Press", to: "#press" },
+  { label: "Contact", to: "/contact" },
 ];
 
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [active, setActive] = useState(navLinks[0].to);
+  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  useEffect(() => {
+    if (!mounted) return;
+
     const onScroll = () => {
       setScrolled(window.scrollY > 10);
       // Update active link based on scroll position
@@ -27,9 +35,10 @@ export default function Navbar() {
         }
       }
     };
+
     window.addEventListener("scroll", onScroll);
     return () => window.removeEventListener("scroll", onScroll);
-  }, []);
+  }, [mounted]);
 
   return (
     <nav

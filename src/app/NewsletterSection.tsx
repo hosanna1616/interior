@@ -1,7 +1,26 @@
 "use client";
 import { motion } from "framer-motion";
+import SecureForm from "./components/SecureForm";
 
 export default function NewsletterSection() {
+  const handleSubmit = async (data: Record<string, string>) => {
+    // Simulate API call
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+
+    // In a real application, you would send this data to your backend
+    console.log("Newsletter section subscription data:", data);
+  };
+
+  const newsletterFields = [
+    {
+      name: "email",
+      type: "email" as const,
+      label: "Email Address",
+      placeholder: "Enter your email address",
+      required: true,
+    },
+  ];
+
   return (
     <section className="bg-annie-purple text-white px-4 py-24 text-center">
       <motion.h2
@@ -11,23 +30,21 @@ export default function NewsletterSection() {
         transition={{ duration: 1 }}
         className="text-4xl md:text-5xl font-serif mb-8"
       >
-        There’s always something new happening at the studio. Let’s stay in
+        There's always something new happening at the studio. Let's stay in
         touch!
       </motion.h2>
-      <form className="max-w-xl mx-auto space-y-6">
-        <input
-          type="email"
-          required
-          placeholder="Enter Email Address"
-          className="w-full bg-transparent border-b border-white/40 pb-3 text-white placeholder-white/60 focus:outline-none focus:border-white transition-colors duration-300 text-lg"
+
+      <div className="max-w-xl mx-auto">
+        <SecureForm
+          fields={newsletterFields}
+          onSubmit={handleSubmit}
+          title=""
+          description=""
+          submitText="Subscribe"
+          rateLimitIdentifier="newsletter-section"
+          className="bg-transparent border-white/20 text-white"
         />
-        <button
-          type="submit"
-          className="w-full bg-white text-annie-purple py-4 mt-8 uppercase tracking-widest hover:bg-annie-brown hover:text-white transition-all duration-300 font-medium rounded shadow"
-        >
-          Submit
-        </button>
-      </form>
+      </div>
     </section>
   );
 }

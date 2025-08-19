@@ -1,6 +1,6 @@
 "use client";
 import { motion } from "framer-motion";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 const particles = Array.from({ length: 22 }, (_, i) => ({
   id: i,
@@ -107,6 +107,20 @@ function getInteriorDesignQuote(quote: string) {
 }
 
 export default function ParticlesBackground() {
+  const [windowHeight, setWindowHeight] = useState(1000); // Default fallback for SSR
+
+  useEffect(() => {
+    // Only access window on the client side
+    setWindowHeight(window.innerHeight);
+    
+    const handleResize = () => {
+      setWindowHeight(window.innerHeight);
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
   return (
     <div className="fixed inset-0 -z-10 w-full h-full overflow-hidden pointer-events-none">
       {/* Animated gradient background */}
@@ -134,7 +148,7 @@ export default function ParticlesBackground() {
             zIndex: 1,
           }}
           initial={{ y: 0, opacity: 0 }}
-          animate={{ y: -window.innerHeight - 100, opacity: [0, p.opacity, 0] }}
+          animate={{ y: -windowHeight - 100, opacity: [0, p.opacity, 0] }}
           transition={{
             duration: p.duration,
             delay: p.delay,
