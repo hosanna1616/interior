@@ -157,7 +157,7 @@ export default function SecureForm({
       // Clear form data on success
       setFormData({});
       setErrors({});
-    } catch (error) {
+    } catch (error: unknown) {
       const errorMessage = handleFormError(error);
       setSubmitMessage({
         type: "error",

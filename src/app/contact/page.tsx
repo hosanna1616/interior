@@ -68,8 +68,8 @@ export default function ContactPage() {
             Get in Touch
           </h1>
           <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-            Ready to transform your space? Let's discuss your vision and create
-            something extraordinary together.
+            Ready to transform your space? Let&apos;s discuss your vision and
+            create something extraordinary together.
           </p>
         </motion.div>
 

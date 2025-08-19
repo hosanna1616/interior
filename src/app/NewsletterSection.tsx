@@ -30,8 +30,8 @@ export default function NewsletterSection() {
         transition={{ duration: 1 }}
         className="text-4xl md:text-5xl font-serif mb-8"
       >
-        There's always something new happening at the studio. Let's stay in
-        touch!
+        There&apos;s always something new happening at the studio. Let&apos;s
+        stay in touch!
       </motion.h2>
 
       <div className="max-w-xl mx-auto">

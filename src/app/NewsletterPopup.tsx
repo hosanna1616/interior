@@ -75,8 +75,8 @@ export default function NewsletterPopup({ onClose }: { onClose: () => void }) {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.4, duration: 0.6 }}
               >
-                Thank you for joining our newsletter. You'll be the first to
-                know about new projects and exclusive events.
+                Thank you for joining our newsletter. You&apos;ll be the first
+                to know about new projects and exclusive events.
               </motion.p>
               <ConfettiEffect />
             </motion.div>

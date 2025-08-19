@@ -215,24 +215,36 @@ export class FormSubmissionState {
 }
 
 // Error handling with user-friendly messages
-export function handleFormError(error: any): string {
+export function handleFormError(error: unknown): string {
   // Don't expose system details to users
   console.error("Form submission error:", error);
 
-  if (error.name === "NetworkError" || error.message?.includes("network")) {
-    return "Network error. Please check your connection and try again.";
-  }
+  // Type guard to check if error is an object with specific properties
+  if (error && typeof error === "object") {
+    const errorObj = error as {
+      name?: string;
+      message?: string;
+      status?: number;
+    };
 
-  if (error.status === 429) {
-    return "Too many requests. Please wait a moment before trying again.";
-  }
+    if (
+      errorObj.name === "NetworkError" ||
+      errorObj.message?.includes("network")
+    ) {
+      return "Network error. Please check your connection and try again.";
+    }
 
-  if (error.status >= 500) {
-    return "Server error. Please try again later.";
-  }
+    if (errorObj.status === 429) {
+      return "Too many requests. Please wait a moment before trying again.";
+    }
 
-  if (error.status >= 400) {
-    return "Invalid request. Please check your input and try again.";
+    if (errorObj.status && errorObj.status >= 500) {
+      return "Server error. Please try again later.";
+    }
+
+    if (errorObj.status && errorObj.status >= 400) {
+      return "Invalid request. Please check your input and try again.";
+    }
   }
 
   return "An unexpected error occurred. Please try again.";
